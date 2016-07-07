@@ -20,6 +20,9 @@ ExternalProject_Add(
 
 ExternalProject_Get_Property(hdf5 SOURCE_DIR)
 
+set(ENV{HDF5_ROOT} ${HDF5_BASE_DIR}/install)
 set(ENV{CPPFLAGS} -I${HDF5_BASE_DIR}/install/include)
 set(ENV{LDFLAGS} -L${HDF5_BASE_DIR}/install/lib)
 set(ENV{LD_LIBRARY_PATH} ${HDF5_BASE_DIR}/install/lib)
+
+copy_shared_libs(hdf5 "hdf5;hdf5_hl" ${HDF5_BASE_DIR}/install/bin)
