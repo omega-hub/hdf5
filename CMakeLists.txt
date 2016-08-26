@@ -1,12 +1,12 @@
 set(HDF5_BASE_DIR ${CMAKE_BINARY_DIR}/3rdparty/hdf5)
 
 ExternalProject_Add(
-    hdf5
+    hdf5_build
     URL "http://www.hdfgroup.org/ftp/HDF5/releases/hdf5-1.8.14/src/hdf5-1.8.14.tar.gz"
     CMAKE_ARGS
         -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-        -DBUILD_SHARED_LIBS=ON
-        -DHDF5_BUILD_HL_LIB=ON
+        #-DBUILD_SHARED_LIBS=ON
+        -DHDF5_BUILD_HL_LIB=OFF
         -DCMAKE_INSTALL_PREFIX:PATH=${HDF5_BASE_DIR}/install
         
     # directories
@@ -18,15 +18,14 @@ ExternalProject_Add(
     INSTALL_DIR ${HDF5_BASE_DIR}/install
 )
 
-ExternalProject_Get_Property(hdf5 SOURCE_DIR)
+add_library(hdf5 STATIC IMPORTED GLOBAL)
+add_dependencies(hdf5 hdf5_build)
+set_target_properties(hdf5 PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_BINARY_DIR}/3rdparty/hdf5/install/include)
 
-set(ENV{HDF5_ROOT} ${HDF5_BASE_DIR}/install)
-set(ENV{CPPFLAGS} -I${HDF5_BASE_DIR}/install/include)
-set(ENV{LDFLAGS} -L${HDF5_BASE_DIR}/install/lib)
-set(ENV{LD_LIBRARY_PATH} ${HDF5_BASE_DIR}/install/lib)
+set(HDF5_LIBNAME ${CMAKE_STATIC_LIBRARY_PREFIX}hdf5${CMAKE_STATIC_LIBRARY_SUFFIX})
 
-if(OMEGA_OS_WIN)
-	copy_shared_libs(hdf5 "hdf5;hdf5_hl" ${HDF5_BASE_DIR}/install/bin)
-else()
-	copy_shared_libs(hdf5 "hdf5;hdf5_hl;hdf5.1.8.14;hdf5.9.0.0;hdf5_hl.1.8.14;hdf5_hl.9.0.0" ${HDF5_BASE_DIR}/install/lib)
-endif()
+set_target_properties(hdf5 PROPERTIES
+    IMPORTED_LOCATION 
+        ${HDF5_BASE_DIR}/install/lib/${HDF5_LIBNAME}
+)
