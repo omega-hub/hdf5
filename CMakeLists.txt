@@ -19,6 +19,12 @@ ExternalProject_Add(
 )
 add_library(hdf5 STATIC IMPORTED GLOBAL)
 add_dependencies(hdf5 hdf5_build)
+
+# create the include directory path, or set_target_properties with
+# INTERFACE_INCLUDE_DIRECTORIES will fail since this path is created at 
+# target install time
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/3rdparty/hdf5/install/include)
+
 set_target_properties(hdf5 PROPERTIES
     INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_BINARY_DIR}/3rdparty/hdf5/install/include)
 
