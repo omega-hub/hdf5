@@ -17,13 +17,17 @@ ExternalProject_Add(
     BINARY_DIR ${HDF5_BASE_DIR}/build
     INSTALL_DIR ${HDF5_BASE_DIR}/install
 )
-
 add_library(hdf5 STATIC IMPORTED GLOBAL)
 add_dependencies(hdf5 hdf5_build)
 set_target_properties(hdf5 PROPERTIES
     INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_BINARY_DIR}/3rdparty/hdf5/install/include)
 
-set(HDF5_LIBNAME ${CMAKE_STATIC_LIBRARY_PREFIX}hdf5${CMAKE_STATIC_LIBRARY_SUFFIX})
+if(WIN32)
+    # hdf is prepended with lib even on windows
+    set(HDF5_LIBNAME libhdf5${CMAKE_STATIC_LIBRARY_SUFFIX})
+else()
+    set(HDF5_LIBNAME ${CMAKE_STATIC_LIBRARY_PREFIX}hdf5${CMAKE_STATIC_LIBRARY_SUFFIX})
+endif()
 
 set_target_properties(hdf5 PROPERTIES
     IMPORTED_LOCATION 
