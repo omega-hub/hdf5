@@ -2,7 +2,7 @@ set(HDF5_BASE_DIR ${CMAKE_BINARY_DIR}/3rdparty/hdf5)
 
 ExternalProject_Add(
     hdf5_build
-    URL "http://www.hdfgroup.org/ftp/HDF5/releases/hdf5-1.8.14/src/hdf5-1.8.14.tar.gz"
+    URL "https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.8.14/src/hdf5-1.8.14.tar.gz"
     CMAKE_ARGS
         -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
         #-DBUILD_SHARED_LIBS=ON
